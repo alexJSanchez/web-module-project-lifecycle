@@ -7,16 +7,24 @@ export default class App extends React.Component {
     super();
     this.state = {
       todos: [],
-    }
+      message: ""
+    };
   }
-  componentDidMount(){
+  componentDidMount() {
     fetch(URL)
-    .then(res => res.json())
-    .then(todos=> this.setState({...this.state, todos: todos.data}))
+      .then((res) => res.json())
+      .then((todos) => this.setState({ ...this.state, todos: todos.data, message: todos.message}));
   }
   render() {
-    return (<>
-         {this.state.todos.map(todos => <p key={todos.id}>{todos.name}</p>)}
-    </>);
+    return (
+      <>
+        <h2>{this.state.message}</h2>
+        <ol>
+          {this.state.todos.map((todos) => (
+            <li key={todos.id}>{todos.name}</li>
+          ))}
+        </ol>
+      </>
+    );
   }
 }
