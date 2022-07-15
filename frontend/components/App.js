@@ -15,9 +15,13 @@ export default class App extends React.Component {
   //handlers
   handleAdd = (e) => {
     e.preventDefault();
-    const todo = { id: Date.now(), name: this.state.newTodo, completed: false };
-    this.setState({ ...this.state, todos: [...this.state.todos, todo]});
+   this.postTodo();
+    
   };
+  postTodo=()=>{
+    axios.post(URL, { ...this.state.todos, id: Date.now(), name: this.state.newTodo, completed: false })
+      .then(res => console.log(res))
+  }
   handleChange = (e) => {
     console.log(e.target.value);
     this.setState({ ...this.state, newTodo: e.target.value });
@@ -36,9 +40,11 @@ export default class App extends React.Component {
       )
       .catch((err) => console.log("oh no bro", err));
   };
+ 
   componentDidMount() {
     this.getTodos();
   }
+
   render() {
     return (
       <>
