@@ -8,17 +8,36 @@ export default class App extends React.Component {
     super();
     this.state = {
       todos: [],
-      message: ""
+      newTodo: "",
+      message: "",
     };
   }
-  getTodos=()=>{
-    axios.get(URL)
-    .then((res) => res.data)
-    .then((todos) => this.setState({ ...this.state, todos: todos.data, message: todos.message}))
-    .catch((err) => console.log('oh no bro', err))
-  }
+  //handlers
+  handleAdd = (e) => {
+    e.preventDefault();
+    const todo = { id: Date.now(), name: this.state.newTodo, completed: false };
+    this.setState({ ...this.state, todos: [...this.state.todos, todo]});
+  };
+  handleChange = (e) => {
+    console.log(e.target.value);
+    this.setState({ ...this.state, newTodo: e.target.value });
+  };
+
+  getTodos = () => {
+    axios
+      .get(URL)
+      .then((res) => res.data)
+      .then((todos) =>
+        this.setState({
+          ...this.state,
+          todos: todos.data,
+          message: todos.message,
+        })
+      )
+      .catch((err) => console.log("oh no bro", err));
+  };
   componentDidMount() {
-   this.getTodos()
+    this.getTodos();
   }
   render() {
     return (
@@ -28,10 +47,10 @@ export default class App extends React.Component {
           {this.state.todos.map((todos) => (
             <li key={todos.id}>{todos.name}</li>
           ))}
-        </ol> 
+        </ol>
         <form>
-        <input/>
-        <button>Add</button>
+          <input onChange={this.handleChange} />
+          <button onClick={this.handleAdd}>Add</button>
         </form>
         <button>Clear</button>
       </>
