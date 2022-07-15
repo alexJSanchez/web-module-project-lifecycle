@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 const URL = "http://localhost:9000/api/todos";
 
@@ -10,10 +11,14 @@ export default class App extends React.Component {
       message: ""
     };
   }
+  getTodos=()=>{
+    axios.get(URL)
+    .then((res) => res.data)
+    .then((todos) => this.setState({ ...this.state, todos: todos.data, message: todos.message}))
+    .catch((err) => console.log('oh no bro', err))
+  }
   componentDidMount() {
-    fetch(URL)
-      .then((res) => res.json())
-      .then((todos) => this.setState({ ...this.state, todos: todos.data, message: todos.message}));
+   this.getTodos()
   }
   render() {
     return (
@@ -23,7 +28,12 @@ export default class App extends React.Component {
           {this.state.todos.map((todos) => (
             <li key={todos.id}>{todos.name}</li>
           ))}
-        </ol>
+        </ol> 
+        <form>
+        <input/>
+        <button>Add</button>
+        </form>
+        <button>Clear</button>
       </>
     );
   }
